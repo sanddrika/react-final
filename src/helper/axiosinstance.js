@@ -1,8 +1,13 @@
 import axios from "axios";
 import {chechkTokenValidity} from "./utils";
 
+const API_URL =
+  process.env.NODE_ENV === "development"
+    ? process.env.REACT_APP_DEV_BASE_URL
+    : process.env.REACT_APP_PROD_BASE_URL;
+
 export const axiosInstance = axios.create({
-  baseURL: "http://localhost:3001",
+  baseURL: API_URL,
 });
 
 axiosInstance.interceptors.request.use(async (req) => {
@@ -13,7 +18,7 @@ axiosInstance.interceptors.request.use(async (req) => {
   req.headers.Authorization = `Bearer ${token}`;
   const isExpired = chechkTokenValidity(token);
   if (!isExpired) return req;
-  const {data} = await axios.post("http://localhost:3001/users/refresh", {
+  const {data} = await axios.post(`${APgitL}/users/refresh`, {
     refresh_token: refreshToken,
   });
   const {token: newAccessToken} = data;
